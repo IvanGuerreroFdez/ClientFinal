@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookie from 'js-cookie';
 
 export default function ConfirmPage() {
   const [confirmationCode, setConfirmationCode] = useState(['', '', '', '', '', '']);
@@ -36,8 +37,8 @@ export default function ConfirmPage() {
 
     const code = confirmationCode.join(''); // Convertimos el array a un string
 
-    // Obtener el token de autenticación de localStorage
-    const token = localStorage.getItem('authToken');
+    // Obtener el token de autenticación de cookies
+    const token = Cookie.get('authToken');  // Usar cookies
 
     if (!token) {
       setError('No estás autenticado. Inicia sesión para continuar.');
@@ -79,35 +80,31 @@ export default function ConfirmPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-4 text-center">Confirmación de correo</h2>
-        <form onSubmit={handleConfirm}>
-          <div className="mb-4 text-center">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Código de confirmación</label>
-            <div className="flex justify-between gap-2">
-              {confirmationCode.map((digit, index) => (
-                <input
-                  key={index}
-                  id={`code-input-${index}`}
-                  type="text"
-                  value={digit}
-                  onChange={(e) => handleInputChange(e, index)}
-                  maxLength="1"
-                  className="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              ))}
-            </div>
+    <div>
+      <h2>Confirmación de correo</h2>
+      <form onSubmit={handleConfirm}>
+        <div>
+          <label>Código de confirmación</label>
+          <div>
+            {confirmationCode.map((digit, index) => (
+              <input
+                key={index}
+                id={`code-input-${index}`}
+                type="text"
+                value={digit}
+                onChange={(e) => handleInputChange(e, index)}
+                maxLength="1"
+              />
+            ))}
           </div>
+        </div>
 
-          {/* Mostrar errores o mensajes de éxito */}
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
+        {/* Mostrar errores o mensajes de éxito */}
+        {error && <p>{error}</p>}
+        {successMessage && <p>{successMessage}</p>}
 
-          <button type="submit" className="w-full bg-indigo-600 text-white p-2 rounded-md">Confirmar</button>
-        </form>
-
-      </div>
+        <button type="submit">Confirmar</button>
+      </form>
     </div>
   );
 }

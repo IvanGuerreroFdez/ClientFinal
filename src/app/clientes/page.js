@@ -1,7 +1,9 @@
+// /src/app/clientes/page.js
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookie from 'js-cookie';
 
 export default function ClientsPage() {
   const [clients, setClients] = useState([]);
@@ -10,14 +12,14 @@ export default function ClientsPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const token = Cookie.get('authToken');  // Obtener el token de las cookies
+    if (!token) {
+      router.push('/login');  // Si no hay token, redirigir a login
+      return;
+    }
+
     const fetchClients = async () => {
       try {
-        const token = localStorage.getItem('authToken'); // Verificar si el token está almacenado
-        if (!token) {
-          router.push('/login'); // Redirigir si no hay token
-          return;
-        }
-
         const response = await fetch('https://bildy-rpmaya.koyeb.app/api/client', {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -44,42 +46,31 @@ export default function ClientsPage() {
   if (error) return <p className="text-red-500 text-center text-xl">{error}</p>;
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center text-indigo-600">Lista de Clientes</h1>
-
+    <div className="container">
+      <h2>Lista de Clientes</h2>
       {clients.length === 0 ? (
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Aún no tienes clientes registrados.</p>
-          <button
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-            onClick={() => router.push('/crear-cliente')}
-          >
-            Crear mi primer cliente
-          </button>
+        <div>
+          <p>Aún no tienes clientes registrados.</p>
+          <button onClick={() => router.push('/crear-cliente')}>Crear mi primer cliente</button>
         </div>
       ) : (
-        <table className="min-w-full bg-white rounded-lg shadow-md">
+        <table>
           <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Nombre</th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Correo</th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Teléfono</th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Acciones</th>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {clients.map((client) => (
-              <tr key={client.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{client.name}</td>
-                <td className="px-4 py-2">{client.email}</td>
-                <td className="px-4 py-2">{client.phone}</td>
-                <td className="px-4 py-2">
-                  <button
-                    className="text-blue-600 hover:text-blue-800 underline"
-                    onClick={() => router.push(`/clients/${client.id}`)}
-                  >
-                    Ver Detalles
-                  </button>
+              <tr key={client.id}>
+                <td>{client.name}</td>
+                <td>{client.email}</td>
+                <td>{client.phone}</td>
+                <td>
+                  <button onClick={() => router.push(`/clients/${client.id}`)}>Ver Detalles</button>
                 </td>
               </tr>
             ))}

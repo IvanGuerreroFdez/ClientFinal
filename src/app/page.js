@@ -1,21 +1,22 @@
-import Link from 'next/link';
+'use client';
 
-// app/page.js
+import { useRouter } from 'next/navigation';
+import Cookie from 'js-cookie';
+
 export default function HomePage() {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
-        <div className="bg-white p-8 rounded shadow-lg w-full max-w-sm">
-          <h2 className="text-2xl font-bold mb-4 text-center">Bienvenido</h2>
-          <div className="text-center">
-            <Link href="/login" className="text-blue-600 hover:text-blue-400 block py-2">
-              Iniciar sesión
-            </Link>
-            <Link href="/register" className="text-blue-600 hover:text-blue-400 block py-2 mt-4">
-              Registrarse
-            </Link>
-          </div>
-        </div>
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Cookie.remove('authToken');  // Elimina el token de la cookie
+    router.push('/login');  // Redirige al login
+  };
+
+  return (
+    <div className="welcome-container">
+      <h2 className="text-center">¡Bienvenido al proyecto Final!</h2>
+      <div className="text-center">
+        <button onClick={handleLogout} className="logout-btn"> Cerrar sesión</button>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

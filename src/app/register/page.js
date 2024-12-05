@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Usamos router para redirigir al usuario
+import Cookie from 'js-cookie';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -35,7 +36,7 @@ export default function RegisterPage() {
       }
 
       const data = await response.json();
-      localStorage.setItem('authToken', data.token); // Guardamos el token de autenticación
+      Cookie.set('authToken', data.token, { expires: 7 });  // Usar cookies con expiración de una semana
       router.push('/confirmacion'); // Redirigimos a la página de confirmación para verificar el correo
     } catch (error) {
       setError('Hubo un problema al comunicarse con el servidor. Intenta nuevamente.');
@@ -43,63 +44,49 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-4 text-center">Regístrate</h2>
-        <form onSubmit={handleRegister}>
-          {/* Campos del formulario de registro */}
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mb-4 p-2 w-full"
-            placeholder="Correo electrónico"
-            required
-          />
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mb-4 p-2 w-full"
-            placeholder="Nombre"
-            required
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mb-4 p-2 w-full"
-            placeholder="Contraseña"
-            required
-          />
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="mb-4 p-2 w-full"
-            placeholder="Confirmar contraseña"
-            required
-          />
-          
-          {/* Mostrar errores si ocurren */}
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+    <div>
+      <h2>Regístrate</h2>
+      <form onSubmit={handleRegister}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Correo electrónico"
+          required
+        />
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Nombre"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Contraseña"
+          required
+        />
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirmar contraseña"
+          required
+        />
 
-          <button type="submit" className="w-full bg-indigo-600 text-white p-2 rounded-md">
-            Registrar
-          </button>
-        </form>
+        {error && <p>{error}</p>}
 
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-500">
-            ¿Ya tienes cuenta?{' '}
-            <a 
-              className="text-indigo-600 hover:text-indigo-700"
-              onClick={() => router.push('/login')}
-            >
-              Inicia sesión aquí
-            </a>
-          </p>
-        </div>
+        <button type="submit">Registrar</button>
+      </form>
+
+      <div>
+        <p>Si tienes cuenta:{' '}
+          <a onClick={() => router.push('/login')} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>
+            Inicia sesión
+          </a>
+        </p>
       </div>
     </div>
   );

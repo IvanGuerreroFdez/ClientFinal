@@ -1,7 +1,9 @@
+import "../styles/global.css";
+
 export default function Footer() {
   return (
-    <footer className="bg-blue-600 text-white p-6 mt-auto">
-      <p className="text-center">© 2024 Mi Aplicación. Todos los derechos reservados.</p>
+    <footer>
+      <p>© 2024 Proyecto Final Web Cliente. Todos los derechos reservados.</p>
     </footer>
   );
 }

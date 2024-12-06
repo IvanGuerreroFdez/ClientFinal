@@ -153,6 +153,31 @@ export default function DeliveryNotesPage() {
 
   };
 
+  // Función para descargar el albarán en PDF
+  const handleDownloadPdf = async (noteId) => {
+    const token = Cookie.get('authToken');
+    try {
+      const response = await fetch(`https://bildy-rpmaya.koyeb.app/api/deliverynote/pdf/${noteId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('No se pudo descargar el albarán en PDF');
+      }
+
+      // Crear un enlace para descargar el archivo PDF
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `albaran_${noteId}.pdf`;
+      link.click();
+    } catch (err) {
+      setError(err.message || 'Error al descargar el albarán en PDF');
+    }
+  };
+
   if (error) return <p className="error">{error}</p>;
   return (
     <div className="container">
@@ -192,6 +217,11 @@ export default function DeliveryNotesPage() {
           <p><strong>Formato:</strong> {selectedDeliveryNote.format}</p>
           <p><strong>Creado en:</strong> {new Date(selectedDeliveryNote.createdAt).toLocaleString()}</p>
           <p><strong>Actualizado en:</strong> {new Date(selectedDeliveryNote.updatedAt).toLocaleString()}</p>
+
+          {/* Botón para descargar el albarán en PDF */}
+          <button className='albaran-pdf-button' onClick={() => handleDownloadPdf(selectedDeliveryNote._id)}>
+            Descargar PDF
+          </button>
         </div>
       )}
 

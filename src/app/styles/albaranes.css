@@ -157,3 +157,19 @@ button:disabled {
   background-color: #ddd;
   cursor: not-allowed;
 }
+
+.albaran-pdf-button{
+    padding: 10px 20px; 
+    background-color: #00abe4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.albaran-pdf-button:hover {
+    background-color: #0094c2;
+}

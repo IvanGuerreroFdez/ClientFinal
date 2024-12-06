@@ -11,6 +11,11 @@ body {
     padding: 0;
 }
 
+html, body {
+    overflow-x: hidden;  /* Permite el desplazamiento horizontal */
+    overflow-y: auto;    /* Permite el desplazamiento vertical */
+}
+
 .navbar {
     background-color: var(--main-blue);
     padding: 15px 0;
@@ -40,6 +45,7 @@ body {
     text-decoration: none;
     font-size: 18px;
     display: block;
+    position: sticky;
 }
 
 .navbar a:hover {
@@ -81,6 +87,9 @@ footer {
 
 .container {
     padding: 40px;
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);
+    min-height: 100vh;
 }
 
 .text-center {
@@ -160,4 +169,8 @@ footer {
 .popup-icon {
     font-size: 40px;
     margin-bottom: 10px;
+}
+
+.project-details {
+    align-content: center;
 }

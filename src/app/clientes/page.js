@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookie from 'js-cookie';
-import '../styles/global.css';
+import '../styles/clientes.css';
 
 export default function ClientsPage() {
   const [clients, setClients] = useState([]);
@@ -23,7 +23,7 @@ export default function ClientsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // Nuevo estado para mostrar el popup
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false); 
   const router = useRouter();
 
   useEffect(() => {
@@ -69,7 +69,6 @@ export default function ClientsPage() {
     const token = Cookie.get('authToken');
 
     try {
-      console.log('Datos enviados:', newClient);
       const response = await fetch('https://bildy-rpmaya.koyeb.app/api/client', {
         method: 'POST',
         headers: {
@@ -81,14 +80,12 @@ export default function ClientsPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Error del servidor:', errorData);
         throw new Error(errorData.message || 'Error al crear el cliente');
       }
 
       const createdClient = await response.json();
 
       setClients((prevClients) => [...prevClients, createdClient]);
-      setSuccessMessage('Cliente creado con éxito');
       setShowSuccessPopup(true); // Mostrar el popup de éxito
       setShowForm(false);
       setNewClient({
@@ -96,7 +93,6 @@ export default function ClientsPage() {
         cif: '',
         address: { street: '', number: '', postal: '', city: '', province: '' },
       });
-
     } catch (err) {
       setError(err.message || 'Error al crear el cliente');
     }
@@ -133,18 +129,17 @@ export default function ClientsPage() {
 
   return (
     <div className="container">
-      <h2>Clientes</h2>
-      <button className="create-client-btn" onClick={() => setShowForm(true)}>
-        Crear Cliente
-      </button>
-      {clients.length === 0 ? (
-        <div>
-          <p>No hay clientes registrados.</p>
-        </div>
-      ) : (
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <div style={{ flex: 1 }}>
-            <h3>Lista de Clientes</h3>
+        <h2>Clientes ---{'>'}</h2>
+        <button className="create-client-btn" onClick={() => setShowForm(true)}>
+          Crear Cliente
+        </button>
+
+        {clients.length === 0 ? (
+          <div>
+            <p>No hay clientes registrados.</p>
+          </div>
+        ) : (
+          <div className="clients-list">
             <ul>
               {clients.map((client) => (
                 <li key={client._id || client.id}>
@@ -155,134 +150,132 @@ export default function ClientsPage() {
               ))}
             </ul>
           </div>
-          <div style={{ flex: 2 }}>
-            {selectedClient ? (
-              <div>
-                <h3>Detalles del Cliente</h3>
-                <p><strong>Nombre del Cliente o Empresa:</strong> {selectedClient.name}</p>
-                <p><strong>CIF:</strong> {selectedClient.cif}</p>
-                <p><strong>ID del Cliente:</strong> {selectedClient._id}</p>
-                <p><strong>ID del Usuario:</strong> {selectedClient.userId}</p>
-                <p><strong>Dirección:</strong></p>
-                <ul>
-                  <li><strong>Calle:</strong> {selectedClient.address.street}</li>
-                  <li><strong>Número:</strong> {selectedClient.address.number}</li>
-                  <li><strong>Código Postal:</strong> {selectedClient.address.postal}</li>
-                  <li><strong>Ciudad:</strong> {selectedClient.address.city}</li>
-                  <li><strong>Provincia:</strong> {selectedClient.address.province}</li>
-                </ul>
-                <p><strong>Creado en:</strong> {new Date(selectedClient.createdAt).toLocaleString()}</p>
-                <p><strong>Actualizado en:</strong> {new Date(selectedClient.updatedAt).toLocaleString()}</p>
-              </div>
-            ) : (
-              <p>Selecciona un cliente para ver los detalles</p>
-            )}
-          </div>
-        </div>
-      )}
-      {showForm && (
-        <div>
-          <h3>Crear Nuevo Cliente</h3>
-          <form onSubmit={handleCreateClient}>
-            <div>
-              <label>Nombre del Cliente o Empresa</label>
-              <input
-                type="text"
-                value={newClient.name}
-                onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <label>CIF</label>
-              <input
-                type="text"
-                value={newClient.cif}
-                onChange={(e) => setNewClient({ ...newClient, cif: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <h4>Ingrese los detalles de su Dirección:</h4>
-              <ul style={{ listStyleType: 'none', paddingLeft: '0' }}>
-                <li>
-                  <label>Calle</label>
-                  <input
-                    type="text"
-                    value={newClient.address.street}
-                    onChange={(e) =>
-                      setNewClient({ ...newClient, address: { ...newClient.address, street: e.target.value } })
-                    }
-                    required
-                  />
-                </li>
-                <li>
-                  <label>Número</label>
-                  <input
-                    type="text"
-                    value={newClient.address.number}
-                    onChange={(e) =>
-                      setNewClient({ ...newClient, address: { ...newClient.address, number: e.target.value } })
-                    }
-                    required
-                  />
-                </li>
-                <li>
-                  <label>Código Postal</label>
-                  <input
-                    type="text"
-                    value={newClient.address.postal}
-                    onChange={(e) =>
-                      setNewClient({ ...newClient, address: { ...newClient.address, postal: e.target.value } })
-                    }
-                    required
-                  />
-                </li>
-                <li>
-                  <label>Ciudad</label>
-                  <input
-                    type="text"
-                    value={newClient.address.city}
-                    onChange={(e) =>
-                      setNewClient({ ...newClient, address: { ...newClient.address, city: e.target.value } })
-                    }
-                    required
-                  />
-                </li>
-                <li>
-                  <label>Provincia</label>
-                  <input
-                    type="text"
-                    value={newClient.address.province}
-                    onChange={(e) =>
-                      setNewClient({ ...newClient, address: { ...newClient.address, province: e.target.value } })
-                    }
-                    required
-                  />
-                </li>
-              </ul>
-            </div>
-            <button type="submit">Guardar</button>
-            <button type="button" onClick={() => setShowForm(false)}>
-              Cancelar
-            </button>
-          </form>
-        </div>
-      )}
-      {successMessage && <p className="text-success">{successMessage}</p>}
+        )}
 
-      {/* Popup de éxito */}
-      {showSuccessPopup && (
-        <div className="popup">
-          <div className="popup-content">
-            <span className="popup-close" onClick={() => setShowSuccessPopup(false)}>
-              &times;
-            </span>
-            <div className="popup-icon">✔️</div>
-            <p>Cliente creado con éxito</p>
+        {selectedClient && (
+          <div className="clients-details">
+            <h3>Detalles del Cliente</h3>
+            <p><strong>Nombre del Cliente o Empresa:</strong> {selectedClient.name}</p>
+            <p><strong>CIF:</strong> {selectedClient.cif}</p>
+            <p><strong>ID del Cliente:</strong> {selectedClient._id}</p>
+            <p><strong>ID del Usuario:</strong> {selectedClient.userId}</p>
+            <p><strong>Dirección:</strong></p>
+            <ul>
+              <li><strong>Calle:</strong> {selectedClient.address.street}</li>
+              <li><strong>Número:</strong> {selectedClient.address.number}</li>
+              <li><strong>Código Postal:</strong> {selectedClient.address.postal}</li>
+              <li><strong>Ciudad:</strong> {selectedClient.address.city}</li>
+              <li><strong>Provincia:</strong> {selectedClient.address.province}</li>
+            </ul>
+            <p><strong>Creado en:</strong> {new Date(selectedClient.createdAt).toLocaleString()}</p>
+            <p><strong>Actualizado en:</strong> {new Date(selectedClient.updatedAt).toLocaleString()}</p>
           </div>
-        </div>
-      )}
+        )}
+
+        {showForm && (
+          <div className="create-client-form">
+            <h3>Crear Nuevo Cliente</h3>
+            <form onSubmit={handleCreateClient}>
+              <div>
+                <label>Nombre del Cliente o Empresa</label>
+                <input
+                  type="text"
+                  value={newClient.name}
+                  onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <label>CIF</label>
+                <input
+                  type="text"
+                  value={newClient.cif}
+                  onChange={(e) => setNewClient({ ...newClient, cif: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <h4>Ingrese los detalles de su Dirección:</h4>
+                <ul style={{ listStyleType: 'none', paddingLeft: '0' }}>
+                  <li>
+                    <label>Calle</label>
+                    <input
+                      type="text"
+                      value={newClient.address.street}
+                      onChange={(e) =>
+                        setNewClient({ ...newClient, address: { ...newClient.address, street: e.target.value } })
+                      }
+                      required
+                    />
+                  </li>
+                  <li>
+                    <label>Número</label>
+                    <input
+                      type="text"
+                      value={newClient.address.number}
+                      onChange={(e) =>
+                        setNewClient({ ...newClient, address: { ...newClient.address, number: e.target.value } })
+                      }
+                      required
+                    />
+                  </li>
+                  <li>
+                    <label>Código Postal</label>
+                    <input
+                      type="text"
+                      value={newClient.address.postal}
+                      onChange={(e) =>
+                        setNewClient({ ...newClient, address: { ...newClient.address, postal: e.target.value } })
+                      }
+                      required
+                    />
+                  </li>
+                  <li>
+                    <label>Ciudad</label>
+                    <input
+                      type="text"
+                      value={newClient.address.city}
+                      onChange={(e) =>
+                        setNewClient({ ...newClient, address: { ...newClient.address, city: e.target.value } })
+                      }
+                      required
+                    />
+                  </li>
+                  <li>
+                    <label>Provincia</label>
+                    <input
+                      type="text"
+                      value={newClient.address.province}
+                      onChange={(e) =>
+                        setNewClient({ ...newClient, address: { ...newClient.address, province: e.target.value } })
+                      }
+                      required
+                    />
+                  </li>
+                </ul>
+              </div>
+              <div className='new-client-buttons'>
+                <button type="submit">Guardar</button>
+                <button type="button" onClick={() => setShowForm(false)}>Cancelar</button>
+              </div>  
+            </form>
+          </div>
+        )}
+
+        {successMessage && <p className="text-success">{successMessage}</p>}
+
+        {/* Popup de éxito */}
+        {showSuccessPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <span className="popup-close" onClick={() => setShowSuccessPopup(false)}>
+                &times;
+              </span>
+              <div className="popup-icon">✔️</div>
+              <p>Cliente creado con éxito</p>
+            </div>
+          </div>
+        )}
     </div>
   );
 }

@@ -1,0 +1,178 @@
+.container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.create-client-btn {
+    padding: 10px 20px;
+    background-color: #534caf;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.create-client-btn:hover {
+    background-color: #3a40a1;
+}
+
+.clients-list {
+    flex: 1;
+    max-width: 250px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.clients-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.clients-list li {
+    margin-bottom: 10px;
+}
+
+.clients-list button {
+    width: 100%;
+    padding: 10px;
+    background-color: #00abe4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.3s ease;
+}
+
+.clients-list button:hover {
+    background-color: #0094c2;
+}
+
+.clients-details {
+    flex: 2;
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    margin-top: 20px;
+}
+
+.clients-details p {
+    margin: 8px 0;
+}
+
+.clients-details ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.clients-details li {
+    margin-bottom: 8px;
+}
+
+.create-client-form {
+    flex: 2;
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    margin-top: 20px;
+}
+
+.create-client-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.create-client-form input,
+.create-client-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.create-client-form button {
+    background-color: #00abe4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-client-form button:hover {
+    background-color: #0094c2;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: #534caf;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    width: 300px;
+    max-width: 90%;
+}
+
+.popup-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: red;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.popup-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.new-client-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.new-client-buttons button {
+    padding: 10px 20px;
+    background-color: #534caf;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 48%;
+}
+
+.new-client-buttons button:hover {
+    background-color: #3a40a1;
+}

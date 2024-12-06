@@ -134,7 +134,9 @@ export default function ClientsPage() {
   return (
     <div className="container">
       <h2>Clientes</h2>
-      <button onClick={() => setShowForm(true)}>Crear Cliente</button>
+      <button className="create-client-btn" onClick={() => setShowForm(true)}>
+        Crear Cliente
+      </button>
       {clients.length === 0 ? (
         <div>
           <p>No hay clientes registrados.</p>
@@ -146,7 +148,9 @@ export default function ClientsPage() {
             <ul>
               {clients.map((client) => (
                 <li key={client._id || client.id}>
-                  <button onClick={() => fetchClientDetails(client._id || client.id)}>{client.name}</button>
+                  <button onClick={() => fetchClientDetails(client._id || client.id)}>
+                    {client.name}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -155,16 +159,20 @@ export default function ClientsPage() {
             {selectedClient ? (
               <div>
                 <h3>Detalles del Cliente</h3>
-                <p>Nombre del Cliente o Empresa: {selectedClient.name}</p>
-                <p>CIF: {selectedClient.cif}</p>
-                <p>Dirección:</p>
+                <p><strong>Nombre del Cliente o Empresa:</strong> {selectedClient.name}</p>
+                <p><strong>CIF:</strong> {selectedClient.cif}</p>
+                <p><strong>ID del Cliente:</strong> {selectedClient._id}</p>
+                <p><strong>ID del Usuario:</strong> {selectedClient.userId}</p>
+                <p><strong>Dirección:</strong></p>
                 <ul>
-                  <li>Calle: {selectedClient.address.street}</li>
-                  <li>Número: {selectedClient.address.number}</li>
-                  <li>Código Postal: {selectedClient.address.postal}</li>
-                  <li>Ciudad: {selectedClient.address.city}</li>
-                  <li>Provincia: {selectedClient.address.province}</li>
+                  <li><strong>Calle:</strong> {selectedClient.address.street}</li>
+                  <li><strong>Número:</strong> {selectedClient.address.number}</li>
+                  <li><strong>Código Postal:</strong> {selectedClient.address.postal}</li>
+                  <li><strong>Ciudad:</strong> {selectedClient.address.city}</li>
+                  <li><strong>Provincia:</strong> {selectedClient.address.province}</li>
                 </ul>
+                <p><strong>Creado en:</strong> {new Date(selectedClient.createdAt).toLocaleString()}</p>
+                <p><strong>Actualizado en:</strong> {new Date(selectedClient.updatedAt).toLocaleString()}</p>
               </div>
             ) : (
               <p>Selecciona un cliente para ver los detalles</p>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookie from 'js-cookie';
+import '../styles/global.css';
 
 export default function ClientsPage() {
   const [clients, setClients] = useState([]);
@@ -22,6 +23,7 @@ export default function ClientsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // Nuevo estado para mostrar el popup
   const router = useRouter();
 
   useEffect(() => {
@@ -87,12 +89,14 @@ export default function ClientsPage() {
 
       setClients((prevClients) => [...prevClients, createdClient]);
       setSuccessMessage('Cliente creado con éxito');
+      setShowSuccessPopup(true); // Mostrar el popup de éxito
       setShowForm(false);
       setNewClient({
         name: '',
         cif: '',
         address: { street: '', number: '', postal: '', city: '', province: '' },
       });
+
     } catch (err) {
       setError(err.message || 'Error al crear el cliente');
     }
@@ -124,8 +128,8 @@ export default function ClientsPage() {
     }
   };
 
-  if (loading) return <p className="text-center text-xl text-blue-500">Cargando...</p>;
-  if (error) return <p className="text-red-500 text-center text-xl">{error}</p>;
+  if (loading) return <p className="loading">Cargando...</p>;
+  if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="container">
@@ -258,6 +262,19 @@ export default function ClientsPage() {
         </div>
       )}
       {successMessage && <p className="text-success">{successMessage}</p>}
+
+      {/* Popup de éxito */}
+      {showSuccessPopup && (
+        <div className="popup">
+          <div className="popup-content">
+            <span className="popup-close" onClick={() => setShowSuccessPopup(false)}>
+              &times;
+            </span>
+            <div className="popup-icon">✔️</div>
+            <p>Cliente creado con éxito</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

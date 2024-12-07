@@ -1,19 +1,18 @@
-// /components/Navbar.jsx
 'use client';
 
 import { useRouter } from 'next/navigation';
 import Cookie from 'js-cookie';
+import "../styles/global.css";
 
 export default function Navbar() {
   const router = useRouter();
-  const token = Cookie.get('authToken');  // Obtenemos el token de las cookies
+  const token = Cookie.get('authToken');
 
-  // Función para redirigir si no hay token
   const handleRedirect = (path) => {
     if (!token && path !== '/login') {
-      router.push('/login');  // Si no hay token, redirige a login
+      router.push('/login'); 
     } else {
-      router.push(path);  // Si hay token, redirige a la ruta deseada
+      router.push(path);
     }
   };
 

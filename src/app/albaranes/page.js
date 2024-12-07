@@ -32,7 +32,7 @@ export default function DeliveryNotesPage() {
       return;
     }
 
-    // Obtener albaranes
+    //obtener albaranes
     const fetchDeliveryNotes = async () => {
       try {
         const response = await fetch('https://bildy-rpmaya.koyeb.app/api/deliverynote', {
@@ -42,7 +42,7 @@ export default function DeliveryNotesPage() {
         });
 
         if (!response.ok) {
-          throw new Error('No se pudieron cargar los albaranes');
+          throw new Error('Error al cargar albaranes');
         }
 
         const data = await response.json();
@@ -52,7 +52,7 @@ export default function DeliveryNotesPage() {
       }
     };
 
-    // Obtener clientes
+    //obtener clientes
     const fetchClients = async () => {
       try {
         const response = await fetch('https://bildy-rpmaya.koyeb.app/api/client', {
@@ -62,7 +62,7 @@ export default function DeliveryNotesPage() {
         });
 
         if (!response.ok) {
-          throw new Error('No se pudieron cargar los clientes');
+          throw new Error('Error al cargar clientes');
         }
 
         const data = await response.json();
@@ -72,7 +72,7 @@ export default function DeliveryNotesPage() {
       }
     };
 
-    // Obtener proyectos
+    //obtener proyectos
     const fetchProjects = async () => {
       try {
         const response = await fetch('https://bildy-rpmaya.koyeb.app/api/project', {
@@ -82,7 +82,7 @@ export default function DeliveryNotesPage() {
         });
 
         if (!response.ok) {
-          throw new Error('No se pudieron cargar los proyectos');
+          throw new Error('Error al cargar proyectos');
         }
 
         const data = await response.json();
@@ -102,7 +102,7 @@ export default function DeliveryNotesPage() {
     const { clientId, projectId, format, material, hours, description, workdate } = newDeliveryNote;
 
     if (!clientId || !projectId || !format || !material || !hours || !description || !workdate) {
-      setError('Por favor, completa todos los campos obligatorios.');
+      setError('Completa todos los campos obligatorios!');
       return;
     }
 
@@ -120,7 +120,7 @@ export default function DeliveryNotesPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al crear el albarán');
+        throw new Error(errorData.message || 'Error al crear albarán');
       }
 
       const createdDeliveryNote = await response.json();
@@ -137,13 +137,12 @@ export default function DeliveryNotesPage() {
         workdate: '',
       });
 
-      setTimeout(() => setShowSuccessPopup(false), 3000);
     } catch (err) {
-      setError(err.message || 'Error al crear el albarán');
+      setError(err.message || 'Error al crear albarán');
     }
   };
 
-  // Seleccionar un albarán para ver los detalles
+  //detalle de albaran
   const handleSelectDeliveryNote = (noteId) => {
     const selectedNote = deliveryNotes.find(note => note._id === noteId);
     setSelectedDeliveryNote(selectedNote);
@@ -153,7 +152,7 @@ export default function DeliveryNotesPage() {
 
   };
 
-  // Función para descargar el albarán en PDF
+  //descargar pdf de albaran
   const handleDownloadPdf = async (noteId) => {
     const token = Cookie.get('authToken');
     try {
@@ -164,10 +163,10 @@ export default function DeliveryNotesPage() {
       });
 
       if (!response.ok) {
-        throw new Error('No se pudo descargar el albarán en PDF');
+        throw new Error('Error al descargar albarán en PDF');
       }
 
-      // Crear un enlace para descargar el archivo PDF
+      //link para descargar pdf
       const blob = await response.blob();
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -180,11 +179,10 @@ export default function DeliveryNotesPage() {
 
   if (error) return <p className="error">{error}</p>;
   return (
-    <div className="container">
-      <h2>Albaranes</h2>
+    <div className="container2">
+      <h2 className='h2-style'>Albaranes</h2>
 
-      {/* Botón para crear un nuevo albarán */}
-      <button className="create-client-btn" onClick={() => setShowForm(true)}>
+      <button className="create-deliverynote-btn" onClick={() => setShowForm(true)}>
         Crear Albarán
       </button>
 
@@ -204,7 +202,6 @@ export default function DeliveryNotesPage() {
         </div>
       )}
 
-      {/* Mostrar detalles del albarán seleccionado */}
       {selectedDeliveryNote && (
         <div className="delivery-note-details">
           <h3>Detalles del Albarán</h3>
@@ -218,20 +215,18 @@ export default function DeliveryNotesPage() {
           <p><strong>Creado en:</strong> {new Date(selectedDeliveryNote.createdAt).toLocaleString()}</p>
           <p><strong>Actualizado en:</strong> {new Date(selectedDeliveryNote.updatedAt).toLocaleString()}</p>
 
-          {/* Botón para descargar el albarán en PDF */}
           <button className='albaran-pdf-button' onClick={() => handleDownloadPdf(selectedDeliveryNote._id)}>
             Descargar PDF
           </button>
         </div>
       )}
 
-      {/* Formulario para crear un nuevo albarán */}
       {showForm && (
         <div className="form-container">
           <h3>Crear Nuevo Albarán</h3>
           <form onSubmit={handleCreateDeliveryNote}>
             <div>
-              <label>Cliente</label>
+              <label>Cliente </label>
               <select
                 value={newDeliveryNote.clientId}
                 onChange={(e) =>
@@ -249,7 +244,7 @@ export default function DeliveryNotesPage() {
             </div>
 
             <div>
-              <label>Proyecto</label>
+              <label>Proyecto </label>
               <select
                 value={newDeliveryNote.projectId}
                 onChange={(e) =>
@@ -267,7 +262,7 @@ export default function DeliveryNotesPage() {
             </div>
 
             <div>
-              <label>Formato</label>
+              <label>Formato </label>
               <select
                 value={newDeliveryNote.format}
                 onChange={(e) =>
@@ -281,7 +276,7 @@ export default function DeliveryNotesPage() {
             </div>
 
             <div>
-              <label>Material</label>
+              <label>Material </label>
               <input
                 type="text"
                 value={newDeliveryNote.material}
@@ -293,7 +288,7 @@ export default function DeliveryNotesPage() {
             </div>
 
             <div>
-              <label>Horas</label>
+              <label>Horas </label>
               <input
                 type="number"
                 value={newDeliveryNote.hours}
@@ -305,7 +300,7 @@ export default function DeliveryNotesPage() {
             </div>
 
             <div>
-              <label>Descripción</label>
+              <label>Descripción </label>
               <input
                 type="text"
                 value={newDeliveryNote.description}
@@ -317,7 +312,7 @@ export default function DeliveryNotesPage() {
             </div>
 
             <div>
-              <label>Fecha de Trabajo</label>
+              <label>Fecha de Trabajo </label>
               <input
                 type="date"
                 value={newDeliveryNote.workdate}
@@ -336,7 +331,6 @@ export default function DeliveryNotesPage() {
         </div>
       )}
 
-      {/* Popup de éxito */}
       {showSuccessPopup && (
         <div className="popup">
           <div className="popup-content">

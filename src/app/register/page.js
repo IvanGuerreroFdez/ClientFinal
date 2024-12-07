@@ -1,8 +1,9 @@
-'use client'; // Asegura que este componente se ejecute en el cliente
+'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Usamos router para redirigir al usuario
+import { useRouter } from 'next/navigation'; 
 import Cookie from 'js-cookie';
+import '../styles/register.css';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -36,58 +37,57 @@ export default function RegisterPage() {
       }
 
       const data = await response.json();
-      Cookie.set('authToken', data.token, { expires: 7 });  // Usar cookies con expiración de una semana
-      router.push('/confirmacion'); // Redirigimos a la página de confirmación para verificar el correo
+      Cookie.set('authToken', data.token, { expires: 7 });
+      router.push('/verification');
     } catch (error) {
-      setError('Hubo un problema al comunicarse con el servidor. Intenta nuevamente.');
+      setError('Error al conectar con el servidor');
     }
   };
 
   return (
-    <div>
-      <h2>Regístrate</h2>
-      <form onSubmit={handleRegister}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Correo electrónico"
-          required
-        />
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Contraseña"
-          required
-        />
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirmar contraseña"
-          required
-        />
+    <div className="register-container">
+        <h2>Regístrate</h2>
+        <form className="register-form" onSubmit={handleRegister}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Correo electrónico"
+              required
+            />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nombre"
+              required
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Contraseña"
+              required
+            />
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirmar contraseña"
+              required
+            />
 
-        {error && <p>{error}</p>}
+            {error && <p>{error}</p>}
 
-        <button type="submit">Registrar</button>
-      </form>
+            <button type="submit">Registrar</button>
+        </form>
 
-      <div>
-        <p>Si tienes cuenta:{' '}
-          <a onClick={() => router.push('/login')} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>
-            Inicia sesión
-          </a>
-        </p>
-      </div>
+        <div>
+            <p>
+              Si tienes cuenta:{' '}
+              <a onClick={() => router.push('/login')}>Inicia sesión</a>
+            </p>
+        </div>
     </div>
   );
 }

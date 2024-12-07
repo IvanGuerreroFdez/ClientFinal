@@ -1,17 +1,24 @@
-/* General styles for albaranes page */
-.container {
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.container2 {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  flex: 1;
 }
 
-h2 {
+.h2-style {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 20px;
 }
 
-.create-client-btn {
+.create-deliverynote-btn {
   display: block;
   width: 100%;
   max-width: 300px;
@@ -27,7 +34,7 @@ h2 {
   transition: background-color 0.3s ease;
 }
 
-.create-client-btn:hover {
+.create-deliverynote-btn:hover {
   background-color: var(--secondary-blue);
 }
 
@@ -158,18 +165,18 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.albaran-pdf-button{
-    padding: 10px 20px; 
-    background-color: #00abe4;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s ease;
-    display: inline-block;
+.albaran-pdf-button {
+  padding: 10px 20px;
+  background-color: #00abe4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  display: inline-block;
 }
 
 .albaran-pdf-button:hover {
-    background-color: #0094c2;
+  background-color: #0094c2;
 }

@@ -22,7 +22,7 @@ export default function ProjectsPage() {
       city: '',
       province: '',
     },
-    clientId: '', // El cliente debe ser seleccionado en el formulario
+    clientId: '',
   });
   const [error, setError] = useState('');
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -37,7 +37,6 @@ export default function ProjectsPage() {
       return;
     }
 
-    // Obtener los clientes
     const fetchClients = async () => {
       try {
         const response = await fetch('https://bildy-rpmaya.koyeb.app/api/client', {
@@ -47,7 +46,7 @@ export default function ProjectsPage() {
         });
 
         if (!response.ok) {
-          throw new Error('No se pudieron cargar los clientes');
+          throw new Error('Error al cargar clientes');
         }
 
         const data = await response.json();
@@ -57,7 +56,6 @@ export default function ProjectsPage() {
       }
     };
 
-    // Obtener los proyectos
     const fetchProjects = async () => {
       try {
         const response = await fetch('https://bildy-rpmaya.koyeb.app/api/project', {
@@ -67,7 +65,7 @@ export default function ProjectsPage() {
         });
 
         if (!response.ok) {
-          throw new Error('No se pudieron cargar los proyectos');
+          throw new Error('Error al cargar proyectos');
         }
 
         const data = await response.json();
@@ -87,7 +85,6 @@ export default function ProjectsPage() {
     e.preventDefault();
     const { name, projectCode, code, address, clientId, email } = newProject;
 
-    // Validación de campos obligatorios
     if (!name || !projectCode || !code || !address.street || !address.number || !address.postal || !address.city || !address.province || !clientId || !email) {
       setError('Por favor, completa todos los campos obligatorios.');
       return;
@@ -112,7 +109,7 @@ export default function ProjectsPage() {
 
       const createdProject = await response.json();
       setProjects((prevProjects) => [...prevProjects, createdProject]);
-      setShowSuccessPopup(true); // Mostrar el popup de éxito
+      setShowSuccessPopup(true);
       setShowForm(false);
       setNewProject({
         name: '',
@@ -130,9 +127,8 @@ export default function ProjectsPage() {
   const handleEditProject = async () => {
     const { name, projectCode, code, address, clientId, email } = selectedProject;
   
-    // Validación de campos obligatorios
     if (!name || !projectCode || !code || !address.street || !address.number || !address.postal || !address.city || !address.province || !clientId || !email) {
-      setError('Por favor, completa todos los campos obligatorios.');
+      setError('Completa todos los campos obligatorios!');
       return;
     }
   
@@ -159,19 +155,19 @@ export default function ProjectsPage() {
       );
       setSelectedProject(updatedProject);
       setError('');
-      setIsEditing(false); // Deshabilitar el modo edición
+      setIsEditing(false);
     } catch (err) {
       setError(err.message || 'Error al actualizar el proyecto');
     }
   };
   
   const handleCancelEdit = () => {
-    setSelectedProject({ ...selectedProject }); // Restaurar los datos originales
-    setIsEditing(false); // Deshabilitar el modo edición
+    setSelectedProject({ ...selectedProject });
+    setIsEditing(false);
   };
 
   const handleEditClick = () => {
-    setIsEditing(true); // Habilitar la edición
+    setIsEditing(true);
   };
 
   if (loading) return <p>Cargando...</p>;
@@ -180,200 +176,197 @@ export default function ProjectsPage() {
   return (
     <div className="container">
         <div className="sidebar">
-            <h2>Proyectos</h2>
-            {/* Botón para crear nuevo proyecto */}
-            <button className="create-button" onClick={() => setShowForm(true)}>
-                Crear Proyecto
-            </button>
-        
-            {projects.length === 0 ? (
-                <div>No hay proyectos registrados.</div>
-            ) : (
-                <div className="projects-list">
-                <ul>
-                    {projects.map((project) => (
-                    <li key={project._id}>
-                        <button onClick={() => setSelectedProject(project)}>
-                        {project.name}
-                        </button>
-                    </li>
-                    ))}
-                </ul>
-                </div>
-            )}
-        
-            {/* Formulario para crear un proyecto */}
-            {showForm && (
-            <div>
-                <h3>Crear Nuevo Proyecto</h3>
-                <form onSubmit={handleCreateProject}>
-                <div>
-                    <label>Nombre del Proyecto </label>
-                    <input
+          <h2>Proyectos</h2>
+          <button className="create-button" onClick={() => setShowForm(true)}>
+              Crear Proyecto
+          </button>
+      
+          {projects.length === 0 ? (
+              <div>No hay proyectos registrados.</div>
+          ) : (
+              <div className="projects-list">
+              <ul>
+                  {projects.map((project) => (
+                  <li key={project._id}>
+                    <button onClick={() => setSelectedProject(project)}>
+                      {project.name}
+                    </button>
+                  </li>
+                  ))}
+              </ul>
+              </div>
+          )}
+      
+          {showForm && (
+          <div className="details">
+              <h3>Crear Nuevo Proyecto</h3>
+              <form onSubmit={handleCreateProject}>
+              <div>
+                  <label>Nombre del Proyecto </label>
+                  <input
                     type="text"
                     value={newProject.name}
                     onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
                     required
-                    />
-                </div>
-                <div>
-                    <label>Código del Proyecto </label>
-                    <input
+                  />
+              </div>
+              <div>
+                  <label>Código del Proyecto </label>
+                  <input
                     type="text"
                     value={newProject.projectCode}
                     onChange={(e) => setNewProject({ ...newProject, projectCode: e.target.value })}
                     required
-                    />
-                </div>
-                <div>
-                    <label>Código Interno </label>
-                    <input
+                  />
+              </div>
+              <div>
+                  <label>Código Interno </label>
+                  <input
                     type="text"
                     value={newProject.code}
                     onChange={(e) => setNewProject({ ...newProject, code: e.target.value })}
                     required
-                    />
-                </div>
-                <div>
-                    <label>Email del Proyecto </label>
-                    <input
+                  />
+              </div>
+              <div>
+                  <label>Email del Proyecto </label>
+                  <input
                     type="email"
                     value={newProject.email}
                     onChange={(e) => setNewProject({ ...newProject, email: e.target.value })}
                     required
-                    />
-                </div>
-                <div>
-                    <label>Selecciona el Cliente </label>
-                    <select
+                  />
+              </div>
+              <div>
+                  <label>Selecciona el Cliente </label>
+                  <select
                     value={newProject.clientId}
                     onChange={(e) => setNewProject({ ...newProject, clientId: e.target.value })}
                     required
-                    >
-                    <option value="">Seleccione un Cliente</option>
-                    {clients.map((client) => (
-                        <option key={client._id} value={client._id}>
-                        {client.name}
-                        </option>
-                    ))}
-                    </select>
-                </div>
-                <div>
-                    <h4>Detalles de Dirección:</h4>
-                    <ul style={{ listStyleType: 'none', paddingLeft: '0' }}>
-                    <li>
-                        <label>Calle </label>
-                        <input
-                        type="text"
-                        value={newProject.address.street}
-                        onChange={(e) =>
-                            setNewProject({ ...newProject, address: { ...newProject.address, street: e.target.value } })
-                        }
-                        required
-                        />
-                    </li>
-                    <li>
-                        <label>Número </label>
-                        <input
+                  >
+                  <option value="">Seleccione un Cliente</option>
+                  {clients.map((client) => (
+                    <option key={client._id} value={client._id}>
+                      {client.name}
+                    </option>
+                  ))}
+                  </select>
+              </div>
+              <div>
+                  <h4>Detalles de Dirección:</h4>
+                  <ul style={{ listStyleType: 'none', paddingLeft: '0' }}>
+                  <li>
+                      <label>Calle </label>
+                      <input
+                      type="text"
+                      value={newProject.address.street}
+                      onChange={(e) =>
+                        setNewProject({ ...newProject, address: { ...newProject.address, street: e.target.value } })
+                      }
+                      required
+                      />
+                  </li>
+                  <li>
+                      <label>Número </label>
+                      <input
                         type="text"
                         value={newProject.address.number}
                         onChange={(e) =>
-                            setNewProject({ ...newProject, address: { ...newProject.address, number: e.target.value } })
+                          setNewProject({ ...newProject, address: { ...newProject.address, number: e.target.value } })
                         }
                         required
-                        />
-                    </li>
-                    <li>
-                        <label>Código Postal </label>
-                        <input
+                      />
+                  </li>
+                  <li>
+                      <label>Código Postal </label>
+                      <input
                         type="text"
                         value={newProject.address.postal}
                         onChange={(e) =>
-                            setNewProject({ ...newProject, address: { ...newProject.address, postal: e.target.value } })
+                          setNewProject({ ...newProject, address: { ...newProject.address, postal: e.target.value } })
                         }
                         required
-                        />
-                    </li>
-                    <li>
-                        <label>Ciudad </label>
-                        <input
+                      />
+                  </li>
+                  <li>
+                      <label>Ciudad </label>
+                      <input
                         type="text"
                         value={newProject.address.city}
                         onChange={(e) =>
-                            setNewProject({ ...newProject, address: { ...newProject.address, city: e.target.value } })
+                          setNewProject({ ...newProject, address: { ...newProject.address, city: e.target.value } })
                         }
                         required
-                        />
-                    </li>
-                    <li>
-                        <label>Provincia </label>
-                        <input
+                      />
+                  </li>
+                  <li>
+                      <label>Provincia </label>
+                      <input
                         type="text"
                         value={newProject.address.province}
                         onChange={(e) =>
-                            setNewProject({ ...newProject, address: { ...newProject.address, province: e.target.value } })
+                          setNewProject({ ...newProject, address: { ...newProject.address, province: e.target.value } })
                         }
                         required
-                        />
-                    </li>
-                    </ul>
-                </div>
-                <button type="submit">Guardar</button>
-                <button type="button" onClick={() => setShowForm(false)}>
-                    Cancelar
-                </button>
-                </form>
-            </div>
-            )}
+                      />
+                  </li>
+                  </ul>
+              </div>
+              <button type="submit">Guardar</button>
+              <button type="button" onClick={() => setShowForm(false)}>
+                  Cancelar
+              </button>
+              </form>
+          </div>
+          )}
         </div>
 
-        {/* Formulario para editar un proyecto */}
         {selectedProject && isEditing && (
-            <div className="details">
+          <div className="details">
             <h3>Editar Proyecto</h3>
             <form onSubmit={handleEditProject}>
                 <div>
                 <label>Nombre del Proyecto </label>
                 <input
-                    type="text"
-                    value={selectedProject.name}
-                    onChange={(e) =>
-                    setSelectedProject({ ...selectedProject, name: e.target.value })
-                    }
-                    required
+                  type="text"
+                  value={selectedProject.name}
+                  onChange={(e) =>
+                  setSelectedProject({ ...selectedProject, name: e.target.value })
+                  }
+                  required
                 />
                 </div>
                 <div>
                 <label>Código del Proyecto </label>
                 <input
-                    type="text"
-                    value={selectedProject.projectCode}
-                    onChange={(e) =>
-                    setSelectedProject({ ...selectedProject, projectCode: e.target.value })
-                    }
-                    required
+                  type="text"
+                  value={selectedProject.projectCode}
+                  onChange={(e) =>
+                  setSelectedProject({ ...selectedProject, projectCode: e.target.value })
+                  }
+                  required
                 />
                 </div>
                 <div>
                 <label>Código Interno </label>
                 <input
-                    type="text"
-                    value={selectedProject.code}
-                    onChange={(e) =>
-                    setSelectedProject({ ...selectedProject, code: e.target.value })
-                    }
-                    required
+                  type="text"
+                  value={selectedProject.code}
+                  onChange={(e) =>
+                  setSelectedProject({ ...selectedProject, code: e.target.value })
+                  }
+                  required
                 />
                 </div>
                 <div>
                 <label>Email del Proyecto </label>
                 <input
-                    type="email"
-                    value={selectedProject.email}
-                    onChange={(e) =>
-                    setSelectedProject({ ...selectedProject, email: e.target.value })
-                    }
-                    required
+                  type="email"
+                  value={selectedProject.email}
+                  onChange={(e) =>
+                  setSelectedProject({ ...selectedProject, email: e.target.value })
+                  }
+                  required
                 />
                 </div>
                 <div>
@@ -399,56 +392,56 @@ export default function ProjectsPage() {
                     <li>
                     <label>Calle </label>
                     <input
-                        type="text"
-                        value={selectedProject.address.street}
-                        onChange={(e) =>
-                        setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, street: e.target.value } })
-                        }
-                        required
+                      type="text"
+                      value={selectedProject.address.street}
+                      onChange={(e) =>
+                      setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, street: e.target.value } })
+                      }
+                      required
                     />
                     </li>
                     <li>
                     <label>Número </label>
                     <input
-                        type="text"
-                        value={selectedProject.address.number}
-                        onChange={(e) =>
-                        setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, number: e.target.value } })
-                        }
-                        required
+                      type="text"
+                      value={selectedProject.address.number}
+                      onChange={(e) =>
+                      setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, number: e.target.value } })
+                      }
+                      required
                     />
                     </li>
                     <li>
                     <label>Código Postal </label>
                     <input
-                        type="text"
-                        value={selectedProject.address.postal}
-                        onChange={(e) =>
-                        setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, postal: e.target.value } })
-                        }
-                        required
+                      type="text"
+                      value={selectedProject.address.postal}
+                      onChange={(e) =>
+                      setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, postal: e.target.value } })
+                      }
+                      required
                     />
                     </li>
                     <li>
                     <label>Ciudad </label>
                     <input
-                        type="text"
-                        value={selectedProject.address.city}
-                        onChange={(e) =>
-                        setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, city: e.target.value } })
-                        }
-                        required
+                      type="text"
+                      value={selectedProject.address.city}
+                      onChange={(e) =>
+                      setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, city: e.target.value } })
+                      }
+                      required
                     />
                     </li>
                     <li>
                     <label>Provincia </label>
                     <input
-                        type="text"
-                        value={selectedProject.address.province}
-                        onChange={(e) =>
-                        setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, province: e.target.value } })
-                        }
-                        required
+                      type="text"
+                      value={selectedProject.address.province}
+                      onChange={(e) =>
+                      setSelectedProject({ ...selectedProject, address: { ...selectedProject.address, province: e.target.value } })
+                      }
+                      required
                     />
                     </li>
                 </ul>
@@ -457,40 +450,37 @@ export default function ProjectsPage() {
                 <button type="button" onClick={handleCancelEdit}>
                 Cancelar
                 </button>
-            </form>
-            </div>
-        )}
-        
-      
-      {/* Mostrar detalles del Proyecto */}
-      {selectedProject && !isEditing && (
-        <div className="details">
-          <h3>Detalles del Proyecto</h3>
-          <p><strong>Nombre:</strong> {selectedProject.name}</p>
-          <p><strong>Código del Proyecto:</strong> {selectedProject.projectCode}</p>
-          <p><strong>Código Interno:</strong> {selectedProject.code}</p>
-          <p><strong>Dirección:</strong> {selectedProject.address.street}, {selectedProject.address.city}</p>
-          <p><strong>ID del Proyecto:</strong> {selectedProject._id}</p>
-          <p><strong>ID del Cliente:</strong> {selectedProject.clientId}</p>
-          <p><strong>Creado en:</strong> {new Date(selectedProject.createdAt).toLocaleString()}</p>
-          <p><strong>Actualizado en:</strong> {new Date(selectedProject.updatedAt).toLocaleString()}</p>
-          <button onClick={handleEditClick}>Editar</button>
-          <button onClick={handleCancelEdit}>Cancelar</button>
-        </div>
-      )}
-  
-      {/* Popup de éxito */}
-      {showSuccessPopup && (
-        <div className="popup">
-          <div className="popup-content">
-            <span className="popup-close" onClick={() => setShowSuccessPopup(false)}>
-              &times;
-            </span>
-            <div className="popup-icon">✔️</div>
-            <p>Proyecto actualizado con éxito</p>
+              </form>
           </div>
-        </div>
-      )}
+        )}
+      
+        {selectedProject && !isEditing && (
+          <div className="details">
+            <h3>Detalles del Proyecto</h3>
+            <p><strong>Nombre:</strong> {selectedProject.name}</p>
+            <p><strong>Código del Proyecto:</strong> {selectedProject.projectCode}</p>
+            <p><strong>Código Interno:</strong> {selectedProject.code}</p>
+            <p><strong>Dirección:</strong> {selectedProject.address.street}, {selectedProject.address.city}</p>
+            <p><strong>ID del Proyecto:</strong> {selectedProject._id}</p>
+            <p><strong>ID del Cliente:</strong> {selectedProject.clientId}</p>
+            <p><strong>Creado en:</strong> {new Date(selectedProject.createdAt).toLocaleString()}</p>
+            <p><strong>Actualizado en:</strong> {new Date(selectedProject.updatedAt).toLocaleString()}</p>
+            <button onClick={handleEditClick}>Editar</button>
+            <button onClick={handleCancelEdit}>Cancelar</button>
+          </div>
+        )}
+  
+        {showSuccessPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <span className="popup-close" onClick={() => setShowSuccessPopup(false)}>
+                &times;
+              </span>
+              <div className="popup-icon">✔️</div>
+              <p>Proyecto actualizado con éxito</p>
+            </div>
+          </div>
+        )}
     </div>
   );  
 }

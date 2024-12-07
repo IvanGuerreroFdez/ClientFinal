@@ -2,13 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 import Cookie from 'js-cookie';
+import './styles/global.css';
 
 export default function HomePage() {
   const router = useRouter();
 
   const handleLogout = () => {
-    Cookie.remove('authToken');  // Elimina el token de la cookie
-    router.push('/login');  // Redirige al login
+    Cookie.remove('authToken');
+    router.push('/login');
   };
 
   return (

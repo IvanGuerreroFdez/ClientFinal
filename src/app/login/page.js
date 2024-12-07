@@ -1,20 +1,21 @@
-'use client'; // Asegura que este componente se ejecute en el cliente
+'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Usamos router para redirigir al usuario
+import { useRouter } from 'next/navigation';
 import Cookie from 'js-cookie';
+import '../styles/login.css';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const router = useRouter(); // Usamos router para redirigir al usuario después de login
+  const router = useRouter(); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://bildy-rpmaya.koyeb.app/api/user/login', {  // URL de la API de login
+      const response = await fetch('https://bildy-rpmaya.koyeb.app/api/user/login', {  
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,52 +33,48 @@ export default function LoginPage() {
       const data = await response.json();
       console.log('Login exitoso:', data);
 
-      // Guardar token de autenticación en cookies con expiración de una semana
       Cookie.set('authToken', data.token, { expires: 7 });
       console.log('Token guardado en cookies:', Cookie.get('authToken'));
 
-      // Redirigir al usuario a la página principal o dashboard
       router.push('/');
     } catch (error) {
-      setError('Hubo un problema al comunicarse con el servidor. Intenta nuevamente.');
+      setError('Error al conectar con el servidor');
     }
   };
 
   return (
-    <div>
-      <h2>Iniciar sesión</h2>
-      <form onSubmit={handleLogin}>
+    <div className="login-container">
+        <h2>Iniciar sesión</h2>
+        <form className="login-form" onSubmit={handleLogin}>
+            <div>
+                <label>Correo electrónico</label>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+            </div>
+            <div>
+                <label>Contraseña</label>
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+            </div>
+
+            {error && <p>{error}</p>}
+
+            <button type="submit">Iniciar sesión</button>
+        </form>
+
         <div>
-          <label>Correo electrónico</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+            <p>Crear una nueva cuenta!{' '}
+                <a onClick={() => router.push('/register')}>Regístrate aquí</a>
+            </p>
         </div>
-        <div>
-          <label>Contraseña</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        {error && <p>{error}</p>}
-
-        <button type="submit">Iniciar sesión</button>
-      </form>
-
-      <div>
-        <p>Crear una nueva cuenta!{' '}
-          <a onClick={() => router.push('/register')} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>
-            Regístrate aquí
-          </a>
-        </p>
-      </div>
     </div>
   );
 }

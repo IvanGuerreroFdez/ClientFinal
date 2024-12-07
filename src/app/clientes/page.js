@@ -42,7 +42,7 @@ export default function ClientsPage() {
         });
 
         if (!response.ok) {
-          throw new Error('No se pudieron cargar los clientes');
+          throw new Error('Error al cargar clientes');
         }
 
         const data = await response.json();
@@ -62,7 +62,7 @@ export default function ClientsPage() {
 
     const { name, cif, address } = newClient;
     if (!name || !cif || !address.street || !address.number || !address.postal || !address.city || !address.province) {
-      setError('Por favor, completa todos los campos obligatorios.');
+      setError('Completa todos los campos obligatorios!');
       return;
     }
 
@@ -86,7 +86,7 @@ export default function ClientsPage() {
       const createdClient = await response.json();
 
       setClients((prevClients) => [...prevClients, createdClient]);
-      setShowSuccessPopup(true); // Mostrar el popup de éxito
+      setShowSuccessPopup(true);
       setShowForm(false);
       setNewClient({
         name: '',
@@ -100,7 +100,7 @@ export default function ClientsPage() {
 
   const fetchClientDetails = async (clientId) => {
     if (!clientId) {
-      setError('ID del cliente no válido.');
+      setError('ID del cliente no valido');
       return;
     }
 
@@ -114,7 +114,7 @@ export default function ClientsPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al obtener los detalles del cliente.');
+        throw new Error('Error al obtener los detalles del cliente');
       }
 
       const clientData = await response.json();
@@ -264,7 +264,6 @@ export default function ClientsPage() {
 
         {successMessage && <p className="text-success">{successMessage}</p>}
 
-        {/* Popup de éxito */}
         {showSuccessPopup && (
           <div className="popup">
             <div className="popup-content">

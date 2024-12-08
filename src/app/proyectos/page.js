@@ -123,43 +123,6 @@ export default function ProjectsPage() {
       setError(err.message || 'Error al crear el proyecto');
     }
   };
-
-  const handleEditProject = async () => {
-    const { name, projectCode, code, address, clientId, email } = selectedProject;
-  
-    if (!name || !projectCode || !code || !address.street || !address.number || !address.postal || !address.city || !address.province || !clientId || !email) {
-      setError('Completa todos los campos obligatorios!');
-      return;
-    }
-  
-    const token = Cookie.get('authToken');
-  
-    try {
-      const response = await fetch(`https://bildy-rpmaya.koyeb.app/api/project/${selectedProject._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(selectedProject),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al actualizar el proyecto');
-      }
-  
-      const updatedProject = await response.json();
-      setProjects((prevProjects) =>
-        prevProjects.map((proj) => (proj._id === updatedProject._id ? updatedProject : proj))
-      );
-      setSelectedProject(updatedProject);
-      setError('');
-      setIsEditing(false);
-    } catch (err) {
-      setError(err.message || 'Error al actualizar el proyecto');
-    }
-  };
   
   const handleCancelEdit = () => {
     setSelectedProject({ ...selectedProject });
@@ -168,6 +131,47 @@ export default function ProjectsPage() {
 
   const handleEditClick = () => {
     setIsEditing(true);
+  };
+  
+  const handleSave = async (e) => {
+    e.preventDefault();
+    try {
+      const token = Cookie.get('authToken');
+      if (!token) {
+        setError('Inicia sesión para continuar');
+        return;
+      }
+  
+      const response = await fetch(
+        `https://bildy-rpmaya.koyeb.app/api/project/${selectedProject._id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(selectedProject),
+        }
+      );
+  
+      if (!response.ok) throw new Error('Error al actualizar el proyecto');
+  
+      const updatedProject = await response.json();
+
+      setProjects((prevProjects) =>
+        prevProjects.map((project) =>
+          project._id === updatedProject._id ? updatedProject : project
+        )
+      );
+  
+      setSelectedProject(null);
+      setIsEditing(false);
+
+      window.location.reload();
+
+    } catch (err) {
+      setError(err.message || 'Error al actualizar el proyecto');
+    }
   };
 
   if (loading) return <p>Cargando...</p>;
@@ -324,7 +328,7 @@ export default function ProjectsPage() {
         {selectedProject && isEditing && (
           <div className="details">
             <h3>Editar Proyecto</h3>
-            <form onSubmit={handleEditProject}>
+            <form onSubmit={handleSave}>
                 <div>
                 <label>Nombre del Proyecto </label>
                 <input
